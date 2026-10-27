@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Attendance Tracker</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><div class="logo">✓</div><div><h1>Student Attendance Tracker</h1><p>Manage student records and daily attendance</p></div></div>
+    <div class="top-actions"><button class="secondary theme-toggle" id="themeToggle" aria-label="Toggle dark mode">☾ Dark mode</button><button class="secondary" id="exportBtn">⇩ Export CSV</button><button class="primary" id="addStudentTop">＋ Add Student</button></div>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" aria-label="Main navigation">
+      <button class="nav-btn active" data-page="dashboard">▦ <span>Dashboard</span></button>
+      <button class="nav-btn" data-page="students">♙ <span>Students</span></button>
+      <button class="nav-btn" data-page="attendance">☑ <span>Mark Attendance</span></button>
+      <button class="nav-btn" data-page="history">◷ <span>Attendance History</span></button>
+      <button class="nav-btn" data-page="settings">⚙ <span>Settings</span></button>
+      <div class="side-note">Records are saved in this browser using Local Storage.</div>
+    </aside>
+    <main class="main">
+      <section id="dashboardPage" class="page">
+        <div class="page-head"><div><h2>Dashboard</h2><p>Here’s your attendance overview.</p></div><div class="field"><label for="dashboardDate">Attendance date</label><input type="date" id="dashboardDate"></div></div>
+        <div class="cards">
+          <div class="stat"><div class="stat-top">Total Students <span class="stat-icon">♙</span></div><div class="stat-value" id="totalStudents">0</div><div class="stat-sub">Registered students</div></div>
+          <div class="stat"><div class="stat-top">Present Today <span class="stat-icon">✓</span></div><div class="stat-value" id="presentToday">0</div><div class="stat-sub">Marked present</div></div>
+          <div class="stat"><div class="stat-top">Absent Today <span class="stat-icon">×</span></div><div class="stat-value" id="absentToday">0</div><div class="stat-sub">Marked absent</div></div>
+          <div class="stat"><div class="stat-top">Overall Attendance <span class="stat-icon">％</span></div><div class="stat-value" id="overallRate">—</div><div class="stat-sub">Present ÷ marked sessions</div></div>
+        </div>
+        <div class="panel"><div class="panel-title"><div><h3>Today’s attendance</h3><p id="dashboardDateLabel">Status by student</p></div><button class="secondary small" data-goto="attendance">Mark attendance →</button></div><div id="dashboardTable"></div></div>
+        <div class="panel"><div class="panel-title"><div><h3>Students below threshold</h3><p>Students whose attendance needs attention</p></div><button class="secondary small" data-goto="settings">Set threshold</button></div><div id="lowAttendanceTable"></div></div>
+      </section>
+      <section id="studentsPage" class="page hidden">
+        <div class="page-head"><div><h2>Students</h2><p>Add, update, search, and manage student records.</p></div><button class="primary" id="addStudentBtn">＋ Add Student</button></div>
+        <div class="panel"><div class="toolbar"><input class="search" id="studentSearch" placeholder="Search name, student ID, or department…" aria-label="Search students"><select id="departmentFilter" aria-label="Filter by department"><option value="">All departments</option></select><select id="studentStatusFilter" aria-label="Filter by attendance status"><option value="">All attendance statuses</option><option>Present</option><option>Absent</option><option>Late</option><option>Leave</option><option value="Not marked">Not marked</option><option value="Low attendance">Low attendance</option></select></div><div id="studentsTable"></div></div>
+      </section>
+      <section id="attendancePage" class="page hidden">
+        <div class="page-head"><div><h2>Mark Attendance</h2><p>Choose a date and set each student’s attendance status.</p></div></div>
+        <div class="notice">Each student can have only one attendance record per date. Saving a status again updates that record instead of creating a duplicate.</div>
+        <div class="panel"><div class="toolbar"><div class="field"><label for="attendanceDate">Attendance date</label><input type="date" id="attendanceDate"></div><input class="search" id="attendanceSearch" placeholder="Search students…" aria-label="Search attendance list"><button class="secondary" id="markAllPresent">Mark all present</button><button class="primary" id="saveAttendance">Save attendance</button></div><div id="attendanceTable"></div></div>
+      </section>
+      <section id="historyPage" class="page hidden">
+        <div class="page-head"><div><h2>Attendance History</h2><p>Review individual student attendance records.</p></div></div>
+        <div class="panel"><div class="toolbar"><select id="historyStudent" aria-label="Select student"><option value="">Select a student</option></select><input type="date" id="historyFrom" aria-label="From date"><input type="date" id="historyTo" aria-label="To date"><button class="secondary" id="clearHistoryFilters">Clear dates</button></div><div id="historyContent"><div class="empty"><strong>Choose a student</strong>Select a student to view their attendance history.</div></div></div>
+      </section>
+      <section id="settingsPage" class="page hidden">
+        <div class="page-head"><div><h2>Settings</h2><p>Configure attendance alerts and manage local data.</p></div></div>
+        <div class="panel"><div class="panel-title"><div><h3>Low attendance threshold</h3><p>Students below this percentage will be highlighted.</p></div></div><div class="threshold-row"><div class="field"><label for="thresholdInput">Threshold (%)</label><input type="number" id="thresholdInput" min="1" max="100" step="1" value="75"></div><button class="primary" id="saveThreshold">Save threshold</button></div></div>
+        <div class="panel"><div class="panel-title"><div><h3>Data management</h3><p>Download a copy of your data or load sample records for a demo.</p></div></div><div class="toolbar"><button class="secondary" id="exportSettings">Export attendance CSV</button><button class="secondary" id="sampleData">Load demo data</button><button class="danger" id="clearData">Delete all data</button></div><p class="subtext">This project stores records in your browser’s Local Storage. Data does not automatically sync to another device or browser. Export a backup before clearing browser data.</p></div>
+      </section>
+    </main>
+  </div>
+  <div class="footer">Student Attendance Tracker · HTML, CSS & JavaScript · Local Storage</div>
+</div>
+<div id="modalRoot"></div><div id="toastRoot" aria-live="polite"></div>
+<script src="script.js"></script>
+</body>
+</html>
